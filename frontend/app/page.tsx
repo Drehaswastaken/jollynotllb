@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-// Define the shape of the data coming from your Python backend
+// Define the shape of the data
 interface AgentMessage {
   agent_name: string;
   role: string;
@@ -24,21 +24,17 @@ export default function Home() {
     setResults([]);
 
     try {
-      // 1. Get the URL from environment variables
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-      // 2. Send POST request to your Python backend
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:10000";
       const response = await fetch(`${apiUrl}/analyze`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // IMPORTANT: This key 'question' matches the BaseModel in main.py
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: caseInput }),
       });
 
       if (!response.ok) {
-        throw new Error(`Server Error: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.detail || `Server Error: ${response.statusText}`;
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -51,86 +47,137 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-900 text-gray-100 p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Moot Court AI
+    <main className="min-h-screen bg-black text-white selection:bg-amber-500 selection:text-black overflow-x-hidden relative">
+
+      {/* Dynamic Background Gradients */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-900/20 rounded-full blur-[120px] animate-float"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-amber-900/20 rounded-full blur-[120px] animate-float" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-12 relative z-10 w-full">
+
+        {/* Cinematic Hero */}
+        <header className="text-center space-y-6 mb-16 animate-fade-in">
+          <div className="inline-flex items-center space-x-2 border border-white/10 bg-white/5 rounded-full px-4 py-1.5 backdrop-blur-md mb-4">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-xs font-sans tracking-widest uppercase text-gray-400">System Online</span>
+          </div>
+
+          <h1 className="text-6xl md:text-8xl font-serif font-bold tracking-tighter leading-none">
+            <span className="block bg-gradient-to-br from-white via-gray-200 to-gray-600 bg-clip-text text-transparent">
+              SUPREME
+            </span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600 drop-shadow-[0_0_30px_rgba(245,158,11,0.3)]">
+              AI COURT
+            </span>
           </h1>
-          <p className="text-gray-400">
-            Test your legal case against 3 AI agents.
+
+          <p className="text-gray-400 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed">
+            Harness the power of autonomous legal agents to stress-test your case before you ever step into a courtroom.
           </p>
-        </div>
+        </header>
 
-        {/* Input Section */}
-        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-xl">
-          <label className="block text-sm font-medium mb-2 text-gray-300">
-            Describe your case:
-          </label>
-          <textarea
-            value={caseInput}
-            onChange={(e) => setCaseInput(e.target.value)}
-            className="w-full h-32 bg-gray-900 border border-gray-700 rounded-lg p-4 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-            placeholder="e.g. I want to sue a cafe because their coffee was too hot..."
-          />
-          <button
-            onClick={runSimulation}
-            disabled={loading || !caseInput}
-            className={`mt-4 w-full py-3 rounded-lg font-bold transition-all duration-200 
-              ${
-                loading
-                  ? "bg-gray-700 cursor-not-allowed text-gray-400"
-                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-lg hover:shadow-blue-500/20"
-              }`}
-          >
-            {loading ? "Analyzing Case..." : "Run Simulation"}
-          </button>
+        {/* Input Area - Glassmorphism */}
+        <div className="relative group animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          {/* Glowing Border Layout */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-amber-500 rounded-2xl opacity-20 group-hover:opacity-50 blur transition duration-1000"></div>
 
-          {error && (
-            <div className="mt-4 p-4 bg-red-900/50 border border-red-500 text-red-200 rounded-lg">
-              {error}
+          <div className="relative bg-[#0f0f0f] rounded-2xl border border-white/10 p-1 md:p-2 shadow-2xl">
+            <div className="bg-black/50 rounded-xl overflow-hidden backdrop-blur-sm">
+              <textarea
+                value={caseInput}
+                onChange={(e) => setCaseInput(e.target.value)}
+                className="w-full h-48 bg-transparent text-lg text-gray-200 p-6 
+                  focus:outline-none placeholder:text-gray-700 resize-none font-sans"
+                placeholder="Describe your legal situation here. Be specific..."
+              />
+
+              <div className="bg-white/5 px-6 py-4 flex items-center justify-between border-t border-white/5">
+                <span className="text-xs text-gray-500 font-mono tracking-wider">SECURE TRANSMISSION</span>
+                <button
+                  onClick={runSimulation}
+                  disabled={loading || !caseInput}
+                  className={`
+                    px-8 py-3 rounded-lg font-bold text-sm tracking-widest uppercase transition-all duration-300
+                    ${loading
+                      ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                      : "bg-white text-black hover:bg-amber-400 hover:shadow-[0_0_20px_rgba(251,191,36,0.6)] transform hover:-translate-y-0.5"
+                    }
+                  `}
+                >
+                  {loading ? "Analyzing..." : "Analyze Case"}
+                </button>
+              </div>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Results Section */}
-        <div className="space-y-6">
-          {results.map((agent, index) => (
-            <div
-              key={index}
-              className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 animate-fade-in-up"
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
-              {/* Agent Header */}
-              <div className="bg-gray-750 p-4 border-b border-gray-700 flex justify-between items-center bg-gray-900/50">
-                <div>
-                  <h3 className="font-bold text-lg text-white">
-                    {agent.agent_name}
-                  </h3>
-                  <span className="text-xs uppercase tracking-wider text-gray-400 font-semibold">
-                    {agent.role}
-                  </span>
+        {/* Error Message */}
+        {error && (
+          <div className="mt-8 p-4 bg-red-900/20 border-l-2 border-red-500 text-red-400 font-mono text-sm animate-fade-in">
+            ERROR: {error}
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20 space-y-8 animate-fade-in">
+            <div className="w-56 h-56 relative rounded-full bg-white/5 backdrop-blur-3xl border border-white/10 p-8 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+              <iframe
+                src="https://lottie.host/embed/880ff019-2182-4aa3-87d9-43c3d5260f89/7Q2Z9Z9Z9Z.json"
+                className="w-full h-full border-none pointer-events-none opacity-80"
+                title="Justice Animation"
+              ></iframe>
+            </div>
+            <div className="space-y-2 text-center">
+              <p className="text-amber-500 font-bold tracking-[0.2em] text-sm animate-pulse">EMPANELING DIGITAL JURY</p>
+              <p className="text-gray-500 text-xs">Processing semantic vectors...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Results Grid */}
+        {results.length > 0 && !loading && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-20">
+            {results.map((agent, index) => (
+              <div
+                key={index}
+                className="group relative bg-[#121212] rounded-xl border border-white/10 overflow-hidden hover:border-amber-500/50 transition-all duration-500"
+                style={{ animation: `fadeIn 0.6s ease-out forwards`, animationDelay: `${index * 150}ms`, opacity: 0 }}
+              >
+                {/* Agent Type Badge */}
+                <div className="absolute top-0 right-0 p-4 opacity-50 font-mono text-xs text-xs text-gray-500 group-hover:text-amber-500 transition-colors">
+                  0{index + 1}
                 </div>
-                {/* Visual indicator for specific agents */}
-                {agent.agent_name.includes("Devil") && (
-                  <span className="text-2xl">😈</span>
-                )}
-                {agent.agent_name.includes("Clerk") && (
-                  <span className="text-2xl">📚</span>
-                )}
-                {agent.agent_name.includes("Strategist") && (
-                  <span className="text-2xl">⚖️</span>
-                )}
-              </div>
 
-              {/* Agent Content */}
-              <div className="p-6 whitespace-pre-wrap leading-relaxed text-gray-300">
-                {agent.content}
+                <div className="p-8 space-y-6">
+                  {/* Icon */}
+                  <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center text-2xl border border-white/10 group-hover:bg-amber-500/10 group-hover:border-amber-500/30 transition-all">
+                    {agent.agent_name.includes("Devil") ? "⚡" :
+                      agent.agent_name.includes("Clerk") ? "📂" : "⚖️"}
+                  </div>
+
+                  {/* Header */}
+                  <div>
+                    <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-amber-400 transition-colors">
+                      {agent.agent_name}
+                    </h3>
+                    <p className="text-xs font-mono text-gray-500 uppercase tracking-wider">
+                      {agent.role}
+                    </p>
+                  </div>
+
+                  {/* Body Body */}
+                  <div className="text-gray-400 text-sm leading-7 font-light border-t border-white/10 pt-6 group-hover:border-amber-500/20 transition-colors whitespace-pre-wrap">
+                    {agent.content}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
       </div>
     </main>
   );

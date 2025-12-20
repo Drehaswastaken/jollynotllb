@@ -25,7 +25,7 @@ class MootCourtAgents:
         if not api_key:
             raise ValueError("HF_TOKEN is missing from .env file")
         
-        self.client = InferenceClient(api_key=api_key)
+        self.client = InferenceClient(token=api_key)
         
         # 3. CHANGE: Select a high-performance free model
         # Qwen 2.5 7B is excellent for logic and following JSON instructions
