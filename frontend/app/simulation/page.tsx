@@ -12,7 +12,14 @@ interface AgentMessage {
     metadata?: any;
 }
 
+import { supabase } from "../../lib/supabaseClient";
+
 export default function Simulation() {
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        window.location.href = "/login";
+    };
+
     const [caseInput, setCaseInput] = useState("");
     const [results, setResults] = useState<AgentMessage[]>([]);
     const [loading, setLoading] = useState(false);
@@ -60,13 +67,21 @@ export default function Simulation() {
             <div className="max-w-6xl mx-auto px-6 py-12 relative z-10 w-full">
 
                 {/* Back Button */}
-                <div className="mb-8">
+                <div className="flex justify-between items-center mb-8">
                     <Link href="/" className="inline-flex items-center text-gray-400 hover:text-white transition-colors group">
                         <div className="p-2 bg-white/5 rounded-full mr-3 group-hover:bg-white/10 border border-white/5">
                             <ArrowLeft size={16} />
                         </div>
                         <span className="text-sm tracking-widest uppercase font-mono">Back to Dashboard</span>
                     </Link>
+
+                    {/* Logout Button */}
+                    <button
+                        onClick={handleLogout}
+                        className="text-xs font-mono text-zinc-500 hover:text-white uppercase tracking-widest transition-colors bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full border border-white/5"
+                    >
+                        Logout
+                    </button>
                 </div>
 
                 {/* Cinematic Hero */}

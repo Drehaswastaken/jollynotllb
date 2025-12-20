@@ -20,6 +20,7 @@ import {
     Cell
 } from "recharts";
 import { Activity, ShieldCheck, TrendingUp, Gavel, FileText } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
 
 // Data for Bar Chart: Global Judicial Backlog
 const backlogData = [
@@ -58,6 +59,11 @@ const caseDistributionData = [
 const COLORS = ["#f97316", "#3b82f6", "#22c55e", "#a855f7"];
 
 export default function ClientDashboard() {
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        window.location.href = "/login";
+    };
+
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-orange-500/30">
 
@@ -78,6 +84,14 @@ export default function ClientDashboard() {
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
                             <span className="text-xs font-mono text-green-400 tracking-widest uppercase">System Online</span>
                         </div>
+
+                        {/* Logout Button */}
+                        <button
+                            onClick={handleLogout}
+                            className="text-xs font-mono text-zinc-500 hover:text-white uppercase tracking-widest transition-colors"
+                        >
+                            Logout
+                        </button>
                     </div>
                 </div>
             </header>
