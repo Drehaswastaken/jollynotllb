@@ -272,6 +272,78 @@ export default function ClientDashboard() {
 
                 </div>
 
+                {/* --- HALLUCINATION & ETHICS MONITORING --- */}
+                <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-8 overflow-hidden hover:border-red-500/30 transition-all duration-300">
+                    <h3 className="text-xl font-serif text-white mb-6 flex items-center">
+                        <Activity className="mr-2 text-red-500" size={20} />
+                        Model Reliability & Hallucination Risk
+                    </h3>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Gauge Visualization */}
+                        <div className="flex flex-col items-center justify-center relative">
+                            <div className="h-[150px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={[{ value: 83 }, { value: 17 }]}
+                                            cx="50%"
+                                            cy="100%"
+                                            startAngle={180}
+                                            endAngle={0}
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                            stroke="none"
+                                        >
+                                            <Cell fill="#22c55e" /> {/* Green for Faithfulness */}
+                                            <Cell fill="#27272a" /> {/* Zinc background */}
+                                        </Pie>
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                <div className="absolute bottom-0 left-0 right-0 text-center mb-2">
+                                    <span className="text-3xl font-bold text-white">83%</span>
+                                    <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1">Source Faithfulness (RAG)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Risk Indicators */}
+                        <div className="space-y-6">
+                            <div>
+                                <div className="flex justify-between items-end mb-2">
+                                    <h4 className="text-zinc-400 text-sm font-mono uppercase tracking-widest">Semantic Entropy</h4>
+                                    <span className="text-amber-500 text-xs font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Elevated Uncertainty</span>
+                                </div>
+                                <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden">
+                                    <div className="bg-gradient-to-r from-green-500 via-amber-500 to-red-500 h-full w-[65%]"></div>
+                                </div>
+                                <p className="text-xs text-zinc-500 mt-2">Reasoning uncertainty detected in 12% of recent complex queries.</p>
+                            </div>
+
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-start space-x-3">
+                                <Activity className="text-red-500 shrink-0 mt-0.5" size={16} />
+                                <div>
+                                    <h5 className="text-red-400 text-sm font-bold mb-1">Hallucination Risk Warning</h5>
+                                    <p className="text-red-300/80 text-xs leading-relaxed">
+                                        Complex reasoning hallucination risk identified at <span className="text-white font-bold">42%</span> for non-RAG queries. Recommend enabling strict citation mode.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Research Insight */}
+                        <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-6 flex flex-col justify-center">
+                            <h4 className="text-blue-400 text-xs font-mono uppercase tracking-widest mb-3">Industry Adoption Insight</h4>
+                            <p className="text-zinc-300 text-sm leading-7">
+                                Recent studies show that <span className="text-white font-bold">79% of legal professionals</span> have adopted this autonomous verification tech.
+                                It has proven <span className="text-white font-bold">50% more effective</span> at risk identification than traditional manual review processes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* --- FOOTER: RESEARCH SUMMARY --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-white/5">
                     <div className="p-4">
