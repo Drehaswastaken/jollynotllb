@@ -13,7 +13,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Supreme AI Court",
+  title: "Jolly-Not-LLB",
   description: "AI-Powered Legal Strategy Analysis",
 };
 

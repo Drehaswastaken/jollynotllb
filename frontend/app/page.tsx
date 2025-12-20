@@ -120,19 +120,27 @@ export default function Home() {
           </div>
         )}
 
-        {/* Loading State */}
+        {/* Loading State - Custom CSS Holographic Loader */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-20 space-y-8 animate-fade-in">
-            <div className="w-56 h-56 relative rounded-full bg-white/5 backdrop-blur-3xl border border-white/10 p-8 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-              <iframe
-                src="https://lottie.host/embed/880ff019-2182-4aa3-87d9-43c3d5260f89/7Q2Z9Z9Z9Z.json"
-                className="w-full h-full border-none pointer-events-none opacity-80"
-                title="Justice Animation"
-              ></iframe>
+            <div className="relative w-48 h-48 flex items-center justify-center">
+              {/* Outer Ring */}
+              <div className="absolute inset-0 border-4 border-amber-500/20 rounded-full animate-[spin_10s_linear_infinite]"></div>
+              {/* Middle Ring */}
+              <div className="absolute inset-4 border-2 border-white/30 rounded-full border-t-white/80 animate-[spin_3s_linear_infinite_reverse]"></div>
+              {/* Inner Ring */}
+              <div className="absolute inset-10 border-2 border-amber-400/50 rounded-full border-b-amber-400 animate-[spin_5s_linear_infinite]"></div>
+
+              {/* Core */}
+              <div className="w-4 h-4 bg-amber-500 rounded-full animate-ping"></div>
+
+              {/* Glow Effect */}
+              <div className="absolute inset-0 bg-amber-500/10 rounded-full blur-xl animate-pulse"></div>
             </div>
+
             <div className="space-y-2 text-center">
-              <p className="text-amber-500 font-bold tracking-[0.2em] text-sm animate-pulse">EMPANELING DIGITAL JURY</p>
-              <p className="text-gray-500 text-xs">Processing semantic vectors...</p>
+              <p className="text-amber-500 font-bold tracking-[0.3em] text-sm animate-pulse">COURT IN SESSION</p>
+              <p className="text-gray-500 text-xs font-mono uppercase">Reviewing Precedents...</p>
             </div>
           </div>
         )}
