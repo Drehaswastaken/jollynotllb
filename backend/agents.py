@@ -55,21 +55,23 @@ class MootCourtAgents:
     def clerk_research(self, user_case: str) -> str:
         """Finds the legal checklist for this specific type of case."""
         sys_prompt = (
-            "You are a Senior Legal Researcher. Your goal is NOT to cite random cases, "
+            "You are a Senior Legal Researcher with respect to the Indian Constitution. Your goal is NOT to cite random cases, "
             "but to identify the specific 'Legal Elements' required to win this type of case. "
             "List the 3-4 things the user MUST prove. I need it in simple language."
         )
-        return self._call_llm(sys_prompt, f"The user wants to do this: '{user_case}'. What are the legal requirements?")
+        raw_response = self._call_llm(sys_prompt, f"The user wants to do this: '{user_case}'. What are the legal requirements?")
+        return raw_response.replace("**", "").replace("## ", "")
 
     def defense_stress_test(self, user_case: str, legal_elements: str) -> str:
         """The Defense tries to break the case immediately."""
         sys_prompt = (
-            "You are a 'Devil's Advocate' Defense Attorney. Look at the user's case and the legal requirements. "
+            "You are a 'Devil's Advocate' Defense Attorney with respect to the Indian Constitution. Look at the user's case and the legal requirements. "
             "Do not be nice. Identify the single biggest weakness, loophole, or missing evidence "
             "that could destroy their case. I need it in simple language."
         )
         user_prompt = f"User Case: {user_case}\nLegal Requirements: {legal_elements}\n\nFind the weak point:"
-        return self._call_llm(sys_prompt, user_prompt)
+        raw_response = self._call_llm(sys_prompt, user_prompt)
+        return raw_response.replace("**", "").replace("## ", "")
 
     def strategist_analysis(self, user_case: str, legal_elements: str, defense_point: str) -> dict:
         """Synthesizes everything into a final user guide."""
@@ -77,7 +79,7 @@ class MootCourtAgents:
         # Note: Open models sometimes need stronger prompting for JSON.
         # I added "Ensure valid JSON" to the prompt below.
         sys_prompt = (
-            "You are a Lead Legal Strategist. Your job is to give the client a final reality check. "
+            "You are a Lead Legal Strategist with respect to the Indian Constitution. Your job is to give the client a final reality check. "
             "Review the case requirements and the defense's attack. "
             "Return a JSON object with: "
             "1. 'probability': A percentage (0-100) of success. "
@@ -99,7 +101,16 @@ class MootCourtAgents:
         cleaned_json = raw_response.replace("```json", "").replace("```", "").strip()
         
         try:
-            return json.loads(cleaned_json)
+            data = json.loads(cleaned_json)
+            # Clean asterisks from string fields (formatting fix)
+            if isinstance(data.get("assessment"), str):
+                data["assessment"] = data["assessment"].replace("**", "").replace("## ", "")
+            if isinstance(data.get("action_plan"), list):
+                data["action_plan"] = [
+                    step.replace("**", "").replace("## ", "") if isinstance(step, str) else step
+                    for step in data["action_plan"]
+                ]
+            return data
         except json.JSONDecodeError:
             # Fallback if the open model fails strict JSON formatting
             return {
