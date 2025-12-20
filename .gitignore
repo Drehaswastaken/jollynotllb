@@ -1,0 +1,11 @@
+@"
+node_modules/
+**/node_modules/
+.next/
+.venv/
+venv/
+__pycache__/
+.env
+.env.local
+.DS_Store
+"@ | Out-File -Encoding utf8 .gitignore
