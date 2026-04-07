@@ -6,6 +6,7 @@ node_modules/
 venv/
 __pycache__/
 .env
+test_rag.py
 .env.local
 .DS_Store
 "@ | Out-File -Encoding utf8 .gitignore
