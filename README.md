@@ -99,6 +99,13 @@ Open `http://localhost:3000` in your browser.
 
 We built this for a hackathon to show how useful specialized AI agents can be. If you want to add to it, feel free to fork the repo and send us a pull request!
 
+## Contributors - 
+1. Kavish Basole - linkedin.com/in/kavishbasole28
+2. Y. Sai Darahaas Reddy - linkedin.com/in/ydarahaasreddy
+3. Sai Keerthana Palavalasa - linkedin.com/in/saikeerthanapalavalasa17
+4. Anuhya Palakurthi - linkedin.com/in/anuhyapalakurthi
+
+
 ---
 
 *Disclaimer: This is an AI simulation for educational and entertainment purposes. It is not professional legal advice.*
